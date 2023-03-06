@@ -1,0 +1,106 @@
+<div class="col-sm-6 col-lg-12">
+    <div class="card">
+      <!-- Card header START -->
+      <div class="card-header pb-0 border-0">
+        <h5 class="card-title mb-0">Who to follow</h5>
+      </div>
+  
+      <!-- Card body START -->
+      <div class="card-body">
+    
+        <ng-container *ngFor="let u of users; ">
+          
+
+
+
+              
+
+                    <div class="hstack gap-2 mb-3" *ngIf="userservice.loggedUser!=u.username"> 
+                    
+                        <div class="avatar">
+                            <a [routerLink]="['/profile',u.id]"><img class="avatar-img rounded-circle" src ="{{this.userservice.host+'/social/api/profilphoto/'+u.id}}" alt=""></a>
+                        </div>
+                       
+                        <div class="overflow-hidden">
+                            <a class="h6 mb-0" [routerLink]="['/profile',u.id]">{{u.nom}} </a>
+                            <p class="mb-0 small text-truncate">News anchor</p>
+                        </div>
+                      
+
+                        <!-- <ng-container *ngFor="let f of friends">
+
+                          <ng-container *ngIf="u.username==f.firstUser.username && f.secondUser.username==userservice.loggedUser && f.accepted==0 ;else second">
+                        <a class="btn btn-success rounded-circle icon-md ms-auto" href="#" id="chatcoversationDropdown1" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"  ><i class="bi bi-person-check"> acc</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatcoversationDropdown1">
+                            <li><a class="dropdown-item btn btn-primary ms-auto" href="#"><i class="bi bi-check-lg me-2 fw-icon"></i>Accept</a></li>
+                          
+                            <li><a class="dropdown-item btn btn-primary ms-auto" href="#"><i class="bi bi-trash me-2 fw-icon"></i>Reject</a></li>
+                          </ul>
+                        </ng-container>
+
+                        <ng-template #second>
+                          <ng-container *ngIf="u.username==f.secondUser.username && f.firstUser.username==userservice.loggedUser && f.accepted==0 ;else third">
+                          <a class="btn btn-danger rounded-circle icon-md ms-auto" href="#" id="chatcoversationDropdown1" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"  ><i class="bi bi-person-check"> send</i>
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatcoversationDropdown1">
+                              <li><a class="dropdown-item btn btn-primary ms-auto" href="#"><i class="bi bi-check-lg me-2 fw-icon"></i>Annuler</a></li>  
+                            </ul>
+                          </ng-container>
+                        </ng-template>
+
+
+                        <ng-template #third>
+                         <ng-container *ngIf="u.username==f.secondUser.username && f.firstUser.username==userservice.loggedUser && f.accepted==1 ">
+
+                        <a class="btn btn-primary rounded-circle icon-md ms-auto" href="#" id="chatcoversationDropdown2" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"  ><i class="bi bi-person-check-fill"> </i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatcoversationDropdown2">
+                           
+                          
+                            <li><a class="dropdown-item btn btn-danger" href="#"><i class="bi bi-trash me-2 fw-icon"></i>Reject</a></li>
+                           
+                          </ul>
+                        </ng-container>
+                      </ng-template>
+
+
+                              <ng-container *ngIf="userservice.loggedUser!=u.username && u.username!=f.secondUser.username">
+                            <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" (click)="addfriend(f.id,userservice.loggedUser,u.id)"  ><i class="fa-solid fa-plus"></i>
+                            </a>
+                          </ng-container>
+
+
+                      </ng-container> -->
+                    </div>
+        </ng-container> 
+
+       
+   
+
+       
+       <!--  <div class="hstack gap-2 mb-3">
+        
+          <div class="avatar">
+            <a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/11.jpg" alt=""> </a>
+          </div>
+         
+          <div class="overflow-hidden">
+            <a class="h6 mb-0" href="#!">Billy Vasquez </a>
+            <p class="mb-0 small text-truncate">News anchor</p>
+          </div>
+        
+          <a class="btn btn-primary rounded-circle icon-md ms-auto" href="#"><i class="bi bi-person-check-fill"> </i></a>
+        </div> -->
+       
+        
+      
+        
+
+        <!-- View more button -->
+        <div class="d-grid mt-3">
+          <a class="btn btn-sm btn-primary-soft" href="#!">View more</a>
+        </div>
+      </div>
+      <!-- Card body END -->
+    </div>

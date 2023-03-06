@@ -1,0 +1,23 @@
+
+   <div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
+    <div class="nav-item w-100">
+    <ng-autocomplete
+      [data]="users"
+      [searchKeyword]="keyword"
+      (selected)='selectEvent($event)'
+        [placeholder]='"Chercher un amie "'
+        [isLoading]='value'
+        [historyListMaxNumber]="5"
+      [itemTemplate]="itemTemplate"
+      [notFoundTemplate]="notFoundTemplate">
+    </ng-autocomplete>
+    
+    <ng-template #itemTemplate let-item>
+    <a [innerHTML]="item.nom"></a>
+    
+    </ng-template>
+    
+    <ng-template #notFoundTemplate let-notFound>
+    <div [innerHTML]="notFound"></div>
+    </ng-template>
+    </div></div>

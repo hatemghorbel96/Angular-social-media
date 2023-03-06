@@ -1,0 +1,261 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { Chat } from 'src/app/model/chat';
+import { Message } from 'src/app/model/message';
+import { User } from 'src/app/model/user';
+import { ChatService } from 'src/app/services/chat.service';
+import { UserService } from 'src/app/services/user.service';
+
+@Component({
+  selector: 'app-minichat',
+  templateUrl: './minichat.component.html',
+  styleUrls: ['./minichat.component.scss']
+})
+export class MinichatComponent implements OnInit {
+
+  chatForm: FormGroup;
+  chatObj: Chat = new Chat();
+  messageObj: Message = new Message();
+  // chatId: number = 22;
+  users: User[] = [];
+  messageList: Message[] = [];
+  public chatList: any = [];
+  replymessage: String = "checking";
+  public chatData: any;
+  msg = "Good work";
+  chatId: any = sessionStorage.getItem('chatId');
+  color = "";
+  secondUserName = "";
+  public alluser: any = [];
+  check = this.userService.loggedUser;
+  timesRun = 0;
+  timesRun2 = 0;
+ 
+/* 
+  firstUserName = sessionStorage.getItem('username');
+  senderEmail = sessionStorage.getItem('username');
+  senderCheck = sessionStorage.getItem('username'); */ 
+
+  firstUserName = this.userService.loggedUser;
+  senderEmail = this.userService.loggedUser;
+  senderCheck = this.userService.loggedUser;
+
+  // emoji
+
+  showEmojiPicker = false;
+  sets = [
+    'native',
+    'google',
+    'twitter',
+    'facebook',
+    'emojione',
+    'apple',
+    'messenger'
+  ]
+  set: Emoji['set'] = 'apple';
+   message = '';
+  toggleEmojiPicker() {
+    console.log(this.showEmojiPicker);
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  addEmoji(event) {
+    console.log(this.message)
+    const { message } = this;
+    console.log(message);
+    console.log(`${event.emoji.native}`)
+    const text = `${message}${event.emoji.native}`;
+
+    this.message = text;
+    // this.showEmojiPicker = false;
+  }
+
+  onFocus() {
+    console.log('focus');
+    this.showEmojiPicker = false;
+  }
+  onBlur() {
+    console.log('onblur')
+  }
+  
+  constructor(private chatService: ChatService, private router: Router, public userService: UserService) {
+    this.chatForm = new FormGroup({
+      replymessage: new FormControl()
+    });
+
+  }
+
+  
+
+  ngOnInit(): void {
+    setInterval(() => {
+      this.chatService.getChatById(sessionStorage.getItem('chatId')).subscribe(data => {
+        this.chatData = data;
+        this.messageList = this.chatData.messageList;
+        this.secondUserName = this.chatData.secondUserName;
+        this.firstUserName = this.chatData.firstUserName;
+      });
+    }, 1000);
+
+    
+   
+    
+
+    let getByname = setInterval(() => {
+      // For getting all the chat list whose ever is logged in.
+      this.chatService.getChatByFirstUserNameOrSecondUserName(this.userService.loggedUser).subscribe(data => {
+        // console.log(data);
+        this.chatData = data;
+        this.chatList = this.chatData;
+      });
+
+      this.timesRun2 += 1;
+      if (this.timesRun2 === 2) {
+        clearInterval(getByname);
+      }
+    }, 1000);
+
+    let all = setInterval(() => {
+
+      this.userService.getall().subscribe((data) => {
+        // console.log(data);
+
+        this.alluser = data;
+      })
+
+      this.timesRun += 1;
+      if (this.timesRun === 2) {
+        clearInterval(all);
+      }
+    }, 1000);
+
+    this.getUsers()
+  }
+
+  getUsers() {
+    this.userService.getall().subscribe(
+      {
+        next: (data) => {
+          this.users = data;
+          console.log("data", data);
+
+        },
+        error: (err) => {
+
+          console.log(err);
+        }
+      })
+  }
+
+ 
+
+  loadChatByEmail(event: string, event1: string) {
+    console.log(event, event1);
+    // For removing the previous chatId
+    sessionStorage.removeItem("chatId");
+
+    // For checking the chat room by both the emails , if there is present then it will give the chat Id in sessionStorage
+    this.chatService.getChatByFirstUserNameAndSecondUserName(event, event1).subscribe(data => {
+      // console.log(data);
+      this.chatData = data;
+      this.chatId = this.chatData[0].chatId;
+      console.log(this.chatId);
+      sessionStorage.setItem('chatId', this.chatId)
+
+
+      setInterval(() => {
+        this.chatService.getChatById(this.chatId).subscribe(data => {
+          this.chatData = data;
+          this.messageList = this.chatData.messageList;
+          this.secondUserName = this.chatData.secondUserName;
+          this.firstUserName = this.chatData.firstUserName;
+        });
+      }, 1000)
+
+    });
+
+  }
+
+  playAudio(){
+  let audio = new Audio();
+/*   audio.src = "../../../~assets/facebook.mp3"; */
+    audio.src = "././assets/facebook.mp3";
+  audio.load();
+  audio.play();
+}
+
+  sendmessagesound() {
+    let audio = new Audio();
+    /*   audio.src = "../../../~assets/facebook.mp3"; */
+    audio.src = "././assets/send.mp3";
+    audio.load();
+    audio.play();
+  }
+
+  sortData() {
+
+    return this.messageList.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+
+  }
+
+  sendMessage() {
+    console.log(this.chatForm.value);
+
+    // This will call the update chat method when ever user send the message
+    this.messageObj.replymessage = this.chatForm.value.replymessage;
+    this.messageObj.senderEmail = this.senderEmail;
+    this.chatService.updateChat(this.messageObj, this.chatId).subscribe(data => {
+      console.log(data);
+      this.chatForm.reset();
+
+      // for displaying the messageList by the chatId
+      this.chatService.getChatById(this.chatId).subscribe(data => {
+        console.log(data);
+        this.chatData = data;
+        // console.log(this.chatData.messageList);console.log(JSON.stringify(this.chatData.messageList));
+        this.messageList = this.chatData.messageList;
+        this.secondUserName = this.chatData.secondUserName;
+        this.firstUserName = this.chatData.firstUserName;
+        this.sendmessagesound();
+      })
+    })
+  }
+
+  routeX() {
+    // this.router.navigateByUrl('/navbar/recommendation-service');
+    sessionStorage.clear();
+    // window.location.reload();
+    this.router.navigateByUrl('');
+  }
+
+  routeHome() {
+    this.router.navigateByUrl('');
+  }
+
+
+  goToChat(username: any) {
+    this.chatService.getChatByFirstUserNameAndSecondUserName(username,this.userService.loggedUser).subscribe(
+      (data) => {
+        this.chatId = data.chatId;
+        sessionStorage.setItem("chatId", this.chatId);
+      },
+      (error) => {
+        if (error.status == 404) {
+          this.chatObj.firstUserName = this.userService.loggedUser;
+          this.chatObj.secondUserName = username;
+          this.chatService.createChatRoom(this.chatObj).subscribe(
+            (data) => {
+              this.chatData = data;
+              this.chatId = this.chatData.chatId;
+              sessionStorage.setItem("chatId", this.chatData.chatId);
+            })
+        } else {
+
+        }
+      });
+
+  }
+
+}

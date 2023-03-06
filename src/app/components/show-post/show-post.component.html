@@ -1,0 +1,147 @@
+<main>
+
+    <!-- Container START -->
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div class="card card-body">
+              <!-- Fees images -->
+              <img class="card-img rounded" src ="{{this.userservice.host+'/social/api/imagePost/'+post.idPost}}" alt="" alt="Post" *ngIf="post.photo">
+              <!-- Feed meta START -->
+              <div class="d-flex align-items-center justify-content-between my-3">
+                <div class="d-flex align-items-center">
+                  <!-- Avatar -->
+                  <div class="avatar avatar-story me-2">
+                    <a href="#!"> <img class="avatar-img rounded-circle" src ="{{this.userservice.host+'/social/api/profilphoto/'+post.user.id}}" alt=""> </a>
+                  </div>
+                  <!-- Info -->
+                  <div>
+                    <div class="nav nav-divider">
+                      <h6 class="nav-item card-title mb-0"> <a href="#!"> {{post.user.nom}} </a></h6>
+                      <span class="nav-item small"> {{post.createdAt | date}}</span>
+                    </div>
+                    <p class="mb-0 small">Web Developer at Webestica</p>
+                  </div>
+                </div>
+                <!-- Card feed action dropdown START -->
+                <div class="dropdown">
+                  <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots"></i>
+                  </a>
+                  <!-- Card feed action dropdown menu -->
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow lori ferguson </a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
+                  </ul>
+                </div>
+                <!-- Card feed action dropdown END -->
+              </div>
+              <!-- Feed meta Info -->
+             
+              <p>{{post.content}}  </p>
+              <!-- Feed react START -->
+              <ul class="nav nav-stack flex-wrap small mb-3">
+                <li class="nav-item">
+
+                    <div *ngFor="let l of post.likes  ">
+                        <div *ngIf="l.postlike==post.idPost && l.usernamelike==this.userservice.loggedUser"> 
+                           
+                            <button class="nav-link active border-0 background-0" style="border: none; background: none;" (click)="dislikepost(userservice.loggedUser,post.idPost)"><i class="bi bi-hand-thumbs-up-fill pe-1" > </i>Liked ({{post.likes.length}}) </button> 
+  
+                            </div>
+
+                            <div  *ngIf="l.postlike!==post.idPost && l.usernamelike!==this.userservice.loggedUser">
+                                <button style="border: none; background: none;"  class="nav-link active border-0 background-0" (click)="likepost(userservice.loggedUser,post.idPost)"><i class="bi bi-hand-thumbs-up-fill pe-1" > </i>Like ({{post.likes.length}}) </button>
+                              </div> 
+                            </div>
+
+                            <div  *ngIf="!post.likes.length">
+                              <button style="border: none; background: none;"  class="nav-link active" (click)="likepost(userservice.loggedUser,post.idPost)"><i class="bi bi-hand-thumbs-up pe-1" > </i>Like ({{post.likes.length}}) </button>
+                            </div> 
+
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#!"> <i class="bi bi-chat-fill pe-1"></i>({{post.comments.length}})</a>
+                </li>
+                <!-- Card share action START -->
+                <li class="nav-item dropdown ms-sm-auto">
+                  <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-reply-fill flip-horizontal ps-1"></i>(3)
+                  </a>
+                  <!-- Card share action dropdown menu -->
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to post</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share post via …</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed</a></li>
+                  </ul>
+                </li>
+                <!-- Card share action END -->
+              </ul>
+              <!-- Feed react END -->
+  
+              <!-- Comment wrap START -->
+              <ul class="comment-wrap list-unstyled" *ngFor="let com of post.comments.slice(0,val)">
+                <!-- Comment item START -->
+                <li class="comment-item">
+                  <div class="d-flex position-relative">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-xs">
+                      <a href="#!"><img class="avatar-img rounded-circle" src ="{{this.userservice.host+'/social/api/profilphoto/'+com.user.id}}" alt=""></a>
+                    </div>
+                    <div class="ms-2">
+                      <!-- Comment by -->
+                      <div class="bg-light rounded-start-top-0 p-3 rounded">
+                        <div class="d-flex justify-content-between">
+                          <h6 class="mb-1"> <a href="#!"> {{ com.user.username }} </a></h6>
+                          <small class="ms-2">{{com.dateCreation | dateAsAgo }}</small>
+                        </div>
+                        <p class="small mb-0">{{com.content}}.</p>{{val}}
+                      </div>
+                      <!-- Comment react -->
+                     
+                    </div>
+                  </div>
+                  <!-- Comment item nested START -->
+                
+               
+                  <!-- Comment item nested END -->
+                </li>
+                <!-- Comment item END -->
+                <!-- Comment item START -->
+               
+                <!-- Comment item END -->
+              </ul>
+              <!-- Comment wrap END -->
+              <div class="card-footer border-0 pb-0">
+                <!-- Load more comments -->
+                <button *ngIf="val<=post.comments.length-1"   role="button" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center" (click)="more()" data-bs-toggle="button" aria-pressed="true">
+                  <div class="spinner-dots me-2">
+                    <span class="spinner-dot"></span>
+                    <span class="spinner-dot"></span>
+                    <span class="spinner-dot"></span>
+                  </div>
+                 
+                  <p > Load more comments </p>
+                </button>
+                <button  *ngIf="val>post.comments.length"  role="button" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center" data-bs-toggle="button" aria-pressed="true">
+                  
+                   
+                    <p> no more </p>
+                  </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     </div>
+    <!-- Container END -->
+  
+  </main>

@@ -1,0 +1,426 @@
+<!-- Container START -->
+<div class="container">
+  <div class="row g-4">
+
+    <!-- Sidenav START -->
+    <div class="col-lg-3">
+
+      <!-- Advanced filter responsive toggler START -->
+      <div class="d-flex align-items-center d-lg-none">
+        <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasSideNavbar" aria-controls="offcanvasSideNavbar">
+          <i class="btn btn-primary fw-bold fa-solid fa-sliders-h"></i>
+          <span class="h6 mb-0 fw-bold d-lg-none ms-2">My profile</span>
+        </button>
+      </div>
+      <!-- Advanced filter responsive toggler END -->
+
+      <!-- Navbar START-->
+      <nav class="navbar navbar-expand-lg mx-0">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSideNavbar">
+          <!-- Offcanvas header -->
+          <div class="offcanvas-header">
+            <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas"
+              aria-label="Close"></button>
+          </div>
+
+          <!-- Offcanvas body -->
+          <app-acceuilprofile></app-acceuilprofile>
+
+        </div>
+      </nav>
+      <!-- Navbar END-->
+    </div>
+    <!-- Sidenav END -->
+
+    <!-- Main content START -->
+    <div class="col-md-8 col-lg-6 vstack gap-4">
+
+      <!-- Story END -->
+
+      <!-- Share feed START -->
+      <div class="card card-body" style="height:150px">
+        <div class="d-flex mb-5">
+          <!-- Avatar -->
+          <div class="avatar avatar-xs me-2">
+            <a href="#"> <img class="avatar-img rounded-circle"
+                src="{{this.userService.host+'/social/api/profilphoto/'+thisuser.id}}" alt=""> </a>
+          </div>
+          <!-- Post input -->
+          <form class="w-100">
+            <input class="form-control pe-4 border-0" placeholder="Share your thoughts..." data-bs-toggle="modal"
+              data-bs-target="#modalCreateFeed">
+          </form>
+        </div>
+        <!-- Share feed toolbar START -->
+        <ul class="nav nav-pills nav-stack small fw-normal">
+          <li class="nav-item">
+            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
+              data-bs-target="#feedActionPhoto"> <i class="bi bi-image-fill text-success pe-2"></i>Photo</a>
+          </li>
+
+
+          <li class="nav-item dropdown ms-sm-auto">
+            <a class="nav-link bg-light py-1 px-2 mb-0" href="#" id="feedActionShare" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="bi bi-three-dots"></i>
+            </a>
+            <!-- Dropdown menu -->
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="feedActionShare">
+              <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Create a poll</a></li>
+              <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-2"></i>Ask a question </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#"> <i class="bi bi-pencil-square fa-fw pe-2"></i>Help</a></li>
+            </ul>
+          </li>
+        </ul>
+        <!-- Share feed toolbar END -->
+      </div>
+      <div class="d-flex " *ngIf="posts ==null">
+        <span class="alert alert-info">pas de posts</span>
+      </div>
+      <!-- Share feed END -->
+
+      <!-- Card feed item START -->
+
+      <div class="card" *ngFor="let p of sortBy().slice(0,val);index as i">
+        <!-- Card header START -->
+        <div class="card-header border-0 pb-0">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <!-- Avatar -->
+              <div class="avatar avatar-story me-2">
+                <a href="#!"> <img class="avatar-img rounded-circle"
+                    src="{{this.userService.host+'/social/api/profilphoto/'+p.user.id}}" alt=""> </a>
+              </div>
+              <!-- Info -->
+              <div>
+                <div class="nav nav-divider">
+                  <h6 class="nav-item card-title mb-0">  <a [routerLink]="['/profile',p.user.id]"> {{p.user.nom}} </a></h6>
+                  <span class="nav-item small"> {{p.createdAt | date}}</span>
+                </div>
+                <p class="mb-0 small">Web Developer </p>
+              </div>
+            </div>
+            <!-- Card feed action dropdown START -->
+            <div class="dropdown">
+              <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+              </a>
+              <!-- Card feed action dropdown menu -->
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction1">
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow lori ferguson
+                  </a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
+              </ul>
+            </div>
+            <!-- Card feed action dropdown END -->
+          </div>
+        </div>
+        <!-- Card header END -->
+        <!-- Card body START -->
+
+        <div class="card-body">
+          <a [routerLink]="['/post',p.idPost]">
+            <p style="color:black;">{{p.content}}</p>
+          </a>
+          <!-- Card img -->
+          <a [routerLink]="['/post',p.idPost]">
+            <img class="card-img" src="{{this.userService.host+'/social/api/imagePost/'+p.idPost}}" alt="Post"
+              *ngIf="p.photo">
+          </a>
+
+
+
+
+          <!-- Feed react START -->
+          <ul class="nav nav-stack py-3 small">
+            <li class="nav-item">
+
+             
+
+
+           
+
+            
+            <ng-container *ngIf="p.likes.length">
+              <ng-container *ngIf="loggedUserLikesPost(p) then first; else second">
+              </ng-container>
+
+                              <ng-template #first>
+                                <button class="nav-link active border-0 background-0" style="border: none; background: none;"
+                                  (click)="dislikepost(userService.loggedUser,p.idPost)"><i class="bi bi-hand-thumbs-up-fill pe-1">
+                                  </i>Liked ({{p.likes.length}}) </button>
+                              </ng-template>
+
+                              <ng-template #second>
+                                <button style="border: none; background: none;" class="nav-link active"
+                                  (click)="likepost(userService.loggedUser,p.idPost)"><i class="bi bi-hand-thumbs-up pe-1"> </i>Like
+                                  ({{p.likes.length}}) </button>
+                            </ng-template>
+              </ng-container>
+
+
+
+              <ng-container *ngIf="!p.likes.length">
+                <button style="border: none; background: none;" class="nav-link active"
+                  (click)="likepost(userService.loggedUser,p.idPost)"><i class="bi bi-hand-thumbs-up pe-1"> </i>Like
+                  ({{p.likes.length}}) </button>
+              </ng-container>
+
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" (click)="hidenitems[i]=!hidenitems[i]" style="border: none; background: none;">
+                <i class="bi bi-chat-fill pe-1"></i>Comments ({{p.comments.length}})</button>
+            </li>
+            <!-- Card share action START -->
+            <li class="nav-item dropdown ms-sm-auto">
+
+              <!-- Card share action dropdown menu -->
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction8">
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct
+                    Message</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to post</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share post via …</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News
+                    Feed</a></li>
+              </ul>
+            </li>
+            <!-- Card share action END -->
+          </ul>
+          <!-- Feed react END -->
+
+          <!-- Add comment -->
+          <div class="d-flex mb-3">
+            <!-- Avatar -->
+            <div class="avatar avatar-xs me-2">
+              <a href="#!"> <img class="avatar-img rounded-circle"
+                  src="{{this.userService.host+'/social/api/profilphoto/'+thisuser.id}}" alt=""> </a>
+            </div>
+            <!-- Comment box  -->
+
+            <!-- ngvar -->
+            <!--  <div *ngVar="{ x: 4 } as variable">
+                  <span>{{variable | json}} ffdd</span>
+              </div> -->
+
+            <form class="position-relative w-100" [formGroup]="commentFormGroup" (ngSubmit)="addComment(p.idPost)">
+              <textarea formControlName="content" class="form-control pe-8 bg-light d-block" rows="1"
+                placeholder="Add a comment..."></textarea>
+              <button class="btn btn-primary btn-shadow btn-rounded btn-sm mt-3 align-right"
+                [disabled]="commentFormGroup.invalid" [disabled]="(isLoading$ | async)">
+                <i *ngIf="isLoading$ | async" class="fas fa-spinner fa-spin"></i>
+                <span *ngIf="isLoading$ | async"> posting...</span>
+                <span *ngIf="!(isLoading$ | async)">post a comment</span>
+
+
+
+
+              </button>
+            </form>
+
+          </div>
+          <!-- Comment wrap START -->
+          <!--  {{hidenitems | json}} -->
+
+          <ul class="comment-wrap list-unstyled" *ngFor="let com of p.comments">
+            <!-- Comment item START -->
+
+            <li class="comment-item" *ngIf="hidenitems[i]">
+              <div class="d-flex position-relative">
+                <!-- Avatar -->
+                <div class="avatar avatar-xs">
+                  <a href="#!"><img class="avatar-img rounded-circle"
+                      src="{{this.userService.host+'/social/api/profilphoto/'+com.user.id}}" alt=""></a>
+                </div>
+                <div class="ms-2">
+                  <!-- Comment by -->
+                  <div class="bg-light rounded-start-top-0 p-3 rounded">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="mb-1"> <a href="#!"> {{ com.user.username }} </a></h6>
+                      <small class="ms-2">{{com.dateCreation | dateAsAgo }}</small>
+                    </div>
+                    <p class="small mb-0">{{com.content}}.</p>
+                  </div>
+
+
+                </div>
+              </div>
+              <!-- Comment item nested START -->
+
+
+            </li>
+
+          </ul>
+
+          <!-- Comment wrap END -->
+        </div>
+
+        <!-- Card body END -->
+        <!-- Card footer START -->
+
+        <!-- Card footer END -->
+      </div>
+
+
+      <!-- Load more button START -->
+      <button role="button" class="btn btn-loader btn-primary-soft mb-5" (click)="more()" data-bs-toggle="button"
+        aria-pressed="true">
+        <span class="load-text"> Load more </span>
+        <div class="load-icon">
+          <div class="spinner-grow spinner-grow-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </button>
+      <!-- Load more button END -->
+
+    </div>
+    <!-- Main content END -->
+
+    <!-- Right sidebar START -->
+    <div class="col-lg-3">
+      <div class="row g-4">
+        <!-- Card follow START -->
+        <app-howtofollow></app-howtofollow>
+        <!-- Card follow START -->
+
+       
+      </div>
+    </div>
+    <!-- Right sidebar END -->
+
+  </div> <!-- Row END -->
+</div>
+<!-- Container END -->
+<!-- Main Chat START -->
+<!-- messaget-->
+<!-- Main Chat END -->
+
+<!-- Modal create Feed START -->
+<div class="modal fade" id="modalCreateFeed" tabindex="-1" aria-labelledby="modalLabelCreateFeed" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- Modal feed header START -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabelCreateFeed">Create post</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal feed header END -->
+
+      <!-- Modal feed body START -->
+      <div class="modal-body">
+        <!-- Add Feed -->
+        <div class="d-flex mb-3">
+          <!-- Avatar -->
+          <div class="avatar avatar-xs me-2">
+            <img class="avatar-img rounded-circle"
+              src="{{this.userService.host+'/social/api/profilphoto/'+thisuser.id}}" alt="">
+          </div>
+          <!-- Feed box  -->
+          <form class="w-100">
+            <textarea class="form-control pe-4 fs-3 lh-1 border-0" rows="4" [(ngModel)]="newPost.content" name="content"
+              placeholder="Share your thoughts..." autofocus></textarea>
+          </form>
+        </div>
+        <!-- Feed rect START -->
+
+        <!-- Feed rect END -->
+      </div>
+      <!-- Modal feed body END -->
+
+      <!-- Modal feed footer -->
+      <div class="modal-footer row justify-content-between">
+        <!-- Select -->
+        <div class="col-lg-3">
+          <select class="form-select js-choice" data-position="top" data-search-enabled="false">
+            <option value="PB">Public</option>
+            <option value="PV">Friends</option>
+            <option value="PV">Only me</option>
+            <option value="PV">Custom</option>
+          </select>
+        </div>
+        <!-- Button -->
+        <div class="col-lg-8 text-sm-end">
+
+          <button type="button" class="btn btn-success-soft" (click)="addstatut()" data-bs-dismiss="modal">Post</button>
+        </div>
+      </div>
+      <!-- Modal feed footer -->
+
+    </div>
+  </div>
+</div>
+<!-- Modal create feed END -->
+
+<!-- Modal create Feed photo START -->
+<div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal feed header START -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="feedActionPhotoLabel">Add post photo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal feed header END -->
+
+      <!-- Modal feed body START -->
+      <div class="modal-body">
+        <!-- Add Feed -->
+        <div class="d-flex mb-3">
+          <!-- Avatar -->
+          <div class="avatar avatar-xs me-2">
+            <img class="avatar-img rounded-circle"
+              src="{{this.userService.host+'/social/api/profilphoto/'+thisuser.id}}" alt="">
+          </div>
+          <!-- Feed box  -->
+          <form class="w-100">
+            <textarea class="form-control pe-4 fs-3 lh-1 border-0" rows="2" [(ngModel)]="newPost.content" name="content"
+              placeholder="Share your thoughts..."></textarea>
+          </form>
+        </div>
+
+        <!-- Dropzone photo START -->
+        <div>
+          <label class="form-label">Upload attachment</label>
+          <div class="dropzone dropzone-default card shadow-none" data-dropzone='{"maxFiles":2}'>
+            <div class="dz-message">
+
+              <a (click)="selectFile.click()" class="file-drop-icon ci-cloud-upload">
+
+              </a><span class="file-drop-message">Drag and drop here to upload</span>
+              <input class="bi bi-images" type="file" value="select" #selectFile (change)="selectImage($event)">
+              <!-- <p>Drag here or click to upload photo.</p> -->
+            </div>
+          </div>
+        </div>
+        <!-- Dropzone photo END -->
+
+      </div>
+      <!-- Modal feed body END -->
+
+      <!-- Modal feed footer -->
+      <div class="modal-footer ">
+        <!-- Button -->
+        <button type="button" class="btn btn-danger-soft me-2" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success-soft" (click)="addpostwithimg()"
+          data-bs-dismiss="modal">Post</button>
+      </div>
+      <!-- Modal feed footer -->
+    </div>
+  </div>
+</div>
